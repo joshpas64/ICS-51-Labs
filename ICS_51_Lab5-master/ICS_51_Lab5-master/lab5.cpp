@@ -61,6 +61,31 @@ void imageThresholding(unsigned char* image, int dim) {
 			// cl is the lowest 8 bit (char - 1byte) register in ecx			10000101 ---  011111111
 			mov dl, 0x80;    //76 'A'     // cmp cl, 0x80 --> 10000000 ---> 1000000  -> 00000000
 			and dl, cl;           //output will always be wrong
+			/*
+			Thank you for reminding me to clear this up so dl right now == 0x80 = 128 = 10000000
+			Like all operation and dl,cl translates to dl = apply AND BITMASK(dl,cl)
+			We want to filter out all cl's (items in 2D Char array) that are less than 128 
+			The AND Bitmask takes two binary strings (of length l) and compares their corresponding bits (at each index)
+			and for each bit pair puts the result into the corresponding bit index of a new bit string
+			Example x = 100010011, y= 001101101 _________ and x,y The result of this operation will be stored in x
+			AND TRUTH TABLE: (0,0) = 0; (1,0) = 0 ; (0,1) = 0 ; (1,1) = 1
+			so x = 100010011
+			so y = 001101101
+			so x = 000000001 <---The result of the operation
+			
+			Since it cl just needs to be greater than 128 and it with dl (128) and store its result in dl 
+			if cl is less than 128, its eigth bit will be zero and all other bits following it will be 0 as well
+			Example: cl = 56 cl = 111000 dl = 128 or 1000000
+			dl = 10000000
+			cl = 00111000
+			dl = 00000000 , dl is marked as 0 which can be used to note it needs to be MADE DARK
+			Example cl = 202 = 11001010 dl = 128 or 10000000
+			dl = 10000000
+			cl = 11001010
+			dl = 10000000 
+			Since the eigth bit matched AND(1,1) = 1 dl is now NOT ZERO showing that cl was greater than or equal to 128
+			and can be jumped to the MAKEBRIGHT section of code now
+		*/
 		/*
 			When using char's as your values remember that they not only denote values numerically, 
 			but also actual characters like letters in an ASCII table, so compare char1 to char2 might compare
