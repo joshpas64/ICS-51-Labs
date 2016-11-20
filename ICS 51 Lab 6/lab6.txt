@@ -1,0 +1,50 @@
+Joshua Pascascio 
+ICS 51 Lab 6
+Student ID: 52192782
+
+Part 1.
+2.1
+after // add ax,1
+AX = 0x100 SF = 0x000 ZF = 0x000 CF = 0x000
+after // sub ax,1
+AX = 0x0FF SF = 0x000 ZF = 0x000 CF = 0x000
+after // add al,1
+AL = 0x00;0'\0' SF = 0x000 ZF = 0x000 CF = 0x001
+after //sub al,3
+AL = 0x0FF  SF = 0x001 ZF = 0x000 CF = 0x001
+
+2.2
+Very different flags are set after add al,1 than compared to add ax,1. 
+After the instruction add al,1 is executed where al = 255 then incremented by 1
+The CF or "carry out flag" is set to 1 (at the first bit of eflags) because 
+the value of 256 overflows with the maximum of an 8 bit register which can only hold up 
+to the  value 255 or (2^8 - 1), meaning some values or  bits has to be carried out 
+into the next register. AX is 16 bit register, so it can hold values from 0 to
+(2^16 - 1) which would include the value 256.
+
+
+Part 2
+
+3.1
+after // idiv ebx
+AX = 0x7D DX = 0xFF
+after // imul ebx
+EAX = 87650000 EDX = 0x12 CF = 0x01
+
+3.2
+From what I have gathered from Idiv, idiv will take eax, (or any corresponding register of eax like ax or al)
+as the dividend (the greater value that is getting divided) and use the one argument of idiv as the divisor
+(the number that divides the dividend) and store the nearest integer quotient (rounds down) in the eax register
+and store whatever remainder is left into the edx register (or its corresponding registers like dx or dl). So if 
+eax = 104, edx = 0, ebx = 25 and the command
+idiv ebx was issued
+eax would be the closest int value, 4, and edx would be the remainder or edx = (104 % 25) = 4
+For imul eax is, or any of its other register like ax, the default operand and whatever argument is 
+issued is the other operand and they are multiplied together with the result of the first n bits being stored in eax.
+The n bits represent how many the register eax could go up to, for eax it is 32  bits meaning it can go up
+to values (0 to (2^32 - 1)). So eax would represent the values of the first 32 bits of the product.
+The edx register holds the value of the bits after eax's first n bits in the case that the product creates an
+overflow. In the part() function call went over eax's limit. So the edx value of 18 or 0x12h meant the product was the sum
+of 18 * (2^32)[the bit that comes after 32nd bit in a bit string] + eax's value. 
+
+
